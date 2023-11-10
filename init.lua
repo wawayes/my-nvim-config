@@ -22,6 +22,8 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", opt)
 vim.keymap.set("n", "<C-k>", "<C-w>k", opt)
 vim.keymap.set("n", "<Leader>v", "<C-w>v", opt)
 vim.keymap.set("n", "<Leader>s", "<C-w>s", opt)
+vim.keymap.set("n",  "<Leader>[", "<C-o>", opt)
+vim.keymap.set("n",  "<Leader>]", "<C-i>", opt)
 
 -- lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -41,6 +43,21 @@ require("lazy").setup({
 		"RRethy/nvim-base16",
 		lazy = true,
 	},
+	    {
+		cmd = "Telescope",
+	    keys = {
+	      { "<leader>p", ":Telescope find_files<CR>", desc = "find files" },
+	 { "<leader>P", ":Telescope live_grep", desc = "grep file" },
+	 { "<leader>rs", ":Telescope resume", desc = "resume" },
+	 { "<leader>q", ":Telescope oldfiles", desc = "oldfiles" },
+	     
+	     
+
+	    },
+	    'nvim-telescope/telescope.nvim',
+	    tag = '0.1.4',
+	     dependencies = { 'nvim-lua/plenary.nvim' },
+	    }
 })
 vim.cmd.colorscheme("base16-tender")
 

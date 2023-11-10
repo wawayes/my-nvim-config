@@ -1,4 +1,6 @@
 {
   "lazy.nvim": { "branch": "main", "commit": "96584866b9c5e998cbae300594d0ccfd0c464627" },
-  "nvim-base16": { "branch": "master", "commit": "010bedf0b7c01ab4d4e4e896a8527d97c222351d" }
+  "nvim-base16": { "branch": "master", "commit": "010bedf0b7c01ab4d4e4e896a8527d97c222351d" },
+  "plenary.nvim": { "branch": "master", "commit": "50012918b2fc8357b87cff2a7f7f0446e47da174" },
+  "telescope.nvim": { "branch": "master", "commit": "7011eaae0ac1afe036e30c95cf80200b8dc3f21a" }
 }
