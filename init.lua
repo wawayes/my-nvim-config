@@ -61,6 +61,11 @@ require("lazy").setup({
 		end,
 	},
 	{
+		"tpope/vim-fugitive",
+		event = "VeryLazy",
+		cmd = "Git",
+	},
+	{
 		"folke/neodev.nvim",
 	},
 	{
