@@ -15,6 +15,7 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 	end,
 })
 
+
 -- keybindings
 local opt = { noremap = true, silent = true }
 vim.keymap.set("n", "<C-l>", "<C-w>l", opt)
