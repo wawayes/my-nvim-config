@@ -65,6 +65,17 @@ require("lazy").setup({
 		"tpope/vim-fugitive",
 		event = "VeryLazy",
 		cmd = "Git",
+		config = function()
+			vim.cmd.cnoreabbrev([[git Git]])
+			vim.cmd.cnoreabbrev([[gp Git push]])
+		end,
+	},
+	{
+		"lewis6991/gitsigns.nvim",
+		event = "VeryLazy",
+		config = function()
+			require('gitsigns').setup()
+		end,
 	},
 	{
 		"folke/neodev.nvim",
@@ -206,7 +217,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 require("lspconfig").pyright.setup({
 	capabilities = capabilities,
 })
-
 -- nvim.cmp 代码补全
 local luasnip = require("luasnip")
 local cmp = require 'cmp'
