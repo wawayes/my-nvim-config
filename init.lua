@@ -77,6 +77,7 @@ require("lazy").setup({
 			require('gitsigns').setup()
 		end,
 	},
+
 	{
 		"folke/neodev.nvim",
 	},
