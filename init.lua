@@ -16,6 +16,7 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 })
 
 
+
 -- keybindings
 local opt = { noremap = true, silent = true }
 vim.keymap.set("n", "<C-l>", "<C-w>l", opt)
@@ -40,10 +41,25 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
+
 require("lazy").setup({
 	{
 		"tpope/vim-rhubarb",
 		event = "VeryLazy",
+	},
+	{
+		"folke/persistence.nvim",
+		event = "BufReadPre", -- this will only start session saving when an actual file was opened
+		config = function()
+			require("persistence").setup()
+		end,
+	},
+	{
+		"folke/persistence.nvim",
+		event = "BufReadPre", -- this will only start session saving when an actual file was opened
+		opts = {
+			-- add any custom options here
+		}
 	},
 	{
 		keys = {
@@ -75,7 +91,6 @@ require("lazy").setup({
 			" Include text after begin and end markers
 			let g:conflict_marker_begin = '^<<<<<<< .*$'
 			let g:conflict_marker_end   = '^>>>>>>> .*$'
-
 			highlight ConflictMarkerBegin guibg=#2f7366
 			highlight ConflictMarkerOurs guibg=#2e5049
 			highlight ConflictMarkerTheirs guibg=#344f69
@@ -346,3 +361,11 @@ cmp.setup.cmdline(':', {
 		{ name = 'cmdline' }
 	})
 })
+
+
+local args = vim.api.nvim_get_vvar("argv")
+-- embed
+if #args > 2 then
+else
+	require("persistence").load({ last = true })
+end
