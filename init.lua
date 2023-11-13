@@ -78,8 +78,16 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		config = function()
 			require("nvim-treesitter.configs").setup({
+				auto_install = true,
 				highlight = {
 					enable = true,
+				},
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						node_incremental = "v",
+						node_decremental = "<BS>",
+					},
 				},
 			})
 		end
@@ -201,6 +209,14 @@ require("lazy").setup({
 		end,
 	},
 })
+
+local has_words_before = function()
+	unpack = unpack or table.unpack
+	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+
 local lspconfig = require('lspconfig')
 require("mason").setup()
 require("mason-lspconfig").setup()
@@ -364,6 +380,38 @@ cmp.setup.cmdline(':', {
 		{ name = 'cmdline' }
 	})
 })
+
+
+local args = vim.api.nvim_get_vvar("argv")
+-- embed
+if #args > 2 then
+else
+	require("persistence").load({ last = true })
+end
+
+
+local args = vim.api.nvim_get_vvar("argv")
+-- embed
+if #args > 2 then
+else
+	require("persistence").load({ last = true })
+end
+
+
+local args = vim.api.nvim_get_vvar("argv")
+-- embed
+if #args > 2 then
+else
+	require("persistence").load({ last = true })
+end
+
+
+local args = vim.api.nvim_get_vvar("argv")
+-- embed
+if #args > 2 then
+else
+	require("persistence").load({ last = true })
+end
 
 
 local args = vim.api.nvim_get_vvar("argv")
