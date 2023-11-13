@@ -44,10 +44,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{
-		"tpope/vim-rhubarb",
-		event = "VeryLazy",
-	},
-	{
 		"folke/persistence.nvim",
 		event = "BufReadPre", -- this will only start session saving when an actual file was opened
 		config = function()
@@ -55,11 +51,8 @@ require("lazy").setup({
 		end,
 	},
 	{
-		"folke/persistence.nvim",
-		event = "BufReadPre", -- this will only start session saving when an actual file was opened
-		opts = {
-			-- add any custom options here
-		}
+		"tpope/vim-rhubarb",
+		event = "VeryLazy",
 	},
 	{
 		keys = {
@@ -80,6 +73,16 @@ require("lazy").setup({
 			"Xuyuanp/nerdtree-git-plugin",
 			"ryanoasis/vim-devicons",
 		},
+	},
+	{
+		"nvim-treesitter/nvim-treesitter",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				highlight = {
+					enable = true,
+				},
+			})
+		end
 	},
 	{
 		"rhysd/conflict-marker.vim",
