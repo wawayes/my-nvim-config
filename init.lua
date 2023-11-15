@@ -44,6 +44,21 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{
+		"tpope/vim-commentary",
+	},
+	{
+		"mfussenegger/nvim-dap",
+	},
+	{
+		"rcarriga/nvim-dap-ui",
+		dependencies = {
+			"mfussenegger/nvim-dap",
+		},
+	},
+	{
+		"leoluz/nvim-dap-go",
+	},
+	{
 		"folke/persistence.nvim",
 		event = "BufReadPre", -- this will only start session saving when an actual file was opened
 		config = function()
@@ -129,6 +144,11 @@ require("lazy").setup({
 						include_surrounding_whitespace = true,
 					},
 				},
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = false,
+				},
+				ensure_installed = { "go" },
 			}
 		end,
 		dependencies = {
@@ -210,6 +230,16 @@ require("lazy").setup({
 
 	{
 		"folke/neodev.nvim",
+		config = function()
+			require("neodev").setup({
+				-- add any options here, or leave empty to use the default settings
+				opts = {
+					library = {
+						types = true,
+					},
+				},
+			})
+		end,
 	},
 	{
 		"folke/tokyonight.nvim",
@@ -284,9 +314,6 @@ require("mason-lspconfig").setup()
 
 -- Set up lspconfig.
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
-require("neodev").setup({
-	-- add any options here, or leave empty to use the default settings
-})
 -- lua_ls
 lspconfig.lua_ls.setup({
 	capabilities = capabilities,
@@ -298,7 +325,7 @@ lspconfig.lua_ls.setup({
 			},
 			diagnostics = {
 				-- Get the language server to recognize the `vim` global
-				globals = { "vim", "hs" },
+				globals = { "vim", "hs", "gopls" },
 			},
 			workspace = {
 				checkThirdParty = false,
@@ -355,6 +382,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
 require("lspconfig").pyright.setup({
 	capabilities = capabilities,
 })
+lspconfig.gopls.setup({
+	cmd = { "gopls", "serve" },
+	capabilities = capabilities,
+	settings = {
+		gopls = {
+			analyses = {
+				unusedparams = true,
+				staticcheck = true,
+			},
+		},
+	},
+})
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 -- nvim.cmp 代码补全
 local luasnip = require("luasnip")
 local cmp = require 'cmp'
@@ -449,3 +494,75 @@ if #args > 2 then
 else
 	require("persistence").load({ last = true })
 end
+
+
+
+-- dap set up
+local dap, dapui = require("dap"), require("dapui")
+local dap_go = require("dap-go")
+dap_go.setup({
+	-- Additional dap configurations can be added.
+	-- dap_configurations accepts a list of tables where each entry
+	-- represents a dap configuration. For more details do:
+	-- :help dap-configuration
+	dap_configurations = {
+		{
+			-- Must be "go" or it will be ignored by the plugin
+			type = "go",
+			name = "Attach remote",
+			mode = "remote",
+			request = "attach",
+		},
+	},
+	-- delve configurations
+	delve = {
+		-- the path to the executable dlv which will be used for debugging.
+		-- by default, this is the "dlv" executable on your PATH.
+		path = "dlv",
+		-- time to wait for delve to initialize the debug session.
+		-- default to 20 seconds
+		initialize_timeout_sec = 20,
+		-- a string that defines the port to start delve debugger.
+		-- default to string "${port}" which instructs nvim-dap
+		-- to start the process in a random available port
+		port = "${port}",
+		-- additional args to pass to dlv
+		args = {},
+		-- the build flags that are passed to delve.
+		-- defaults to empty string, but can be used to provide flags
+		-- such as "-tags=unit" to make sure the test suite is
+		-- compiled during debugging, for example.
+		-- passing build flags using args is ineffective, as those are
+		-- ignored by delve in dap mode.
+		build_flags = "",
+	},
+})
+require("dapui").setup()
+dap.listeners.after.event_initialized["dapui_config"] = function()
+	dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+	dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+	dapui.close()
+end
+
+vim.keymap.set("n", "<leader>dr", function()
+	require("dap").continue()
+end)
+vim.keymap.set("n", "<leader>de", function()
+	require("dap").toggle_breakpoint()
+end)
+vim.keymap.set("n", "<leader>dn", function()
+	require("dap").step_over()
+end)
+vim.keymap.set("n", "<leader>ds", function()
+	require("dap").step_into()
+end)
+vim.keymap.set("n", "<leader>do", function()
+	require("dap").step_out()
+end)
+vim.keymap.set("n", "<leader>dc", function()
+	require("dap").disconnect()
+end)
